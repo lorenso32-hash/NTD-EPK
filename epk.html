@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NightTimeDrive — EPK</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hammersmith+One&family=League+Spartan:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <style>
+
+    @page { size: letter; margin: 0; }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:     #050121;
+      --navy-mid: #080230;
+      --pink:     #E21056;
+      --teal:     #00B4CC;
+      --white:    #FFFFFF;
+      --w80:      rgba(255,255,255,0.80);
+      --w60:      rgba(255,255,255,0.60);
+      --w20:      rgba(255,255,255,0.20);
+      --w10:      rgba(255,255,255,0.10);
+    }
+
+    html, body {
+      width: 8.5in;
+      height: 11in;
+      overflow: hidden;
+      background: var(--navy);
+      color: var(--white);
+      font-family: 'League Spartan', sans-serif;
+      font-weight: 300;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .page {
+      width: 8.5in;
+      height: 11in;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* HEADER */
+    .header {
+      background: var(--navy-mid);
+      border-bottom: 2px solid var(--pink);
+      padding: 0.08in 0.4in 0.08in 2.8in;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 2;
+    }
+    .header-logo {
+      position: absolute;
+      left: 0.35in;
+      top: -0.5in;
+      z-index: 10;
+    }
+    .header-logo img {
+      height: 1.56in;
+      display: block;
+      filter: brightness(0) invert(1);
+    }
+    .header-right { text-align: right; }
+    .header-genre {
+      font-family: 'Hammersmith One', sans-serif;
+      font-size: 8.5pt;
+      letter-spacing: 3px;
+      color: var(--teal);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .header-tagline {
+      font-size: 8pt;
+      font-weight: 300;
+      font-style: italic;
+      color: var(--w60);
+    }
+
+    /* MAIN GRID */
+    .main {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 55% 45%;
+      overflow: hidden;
+    }
+
+    .col-left {
+      border-right: 1px solid var(--w10);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .col-right {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .section {
+      padding: 0.26in 0.36in;
+      border-bottom: 1px solid var(--w10);
+      flex-shrink: 0;
+    }
+    .col-right .section { padding: 0.11in 0.3in; }
+
+    .section-label {
+      font-family: 'Hammersmith One', sans-serif;
+      font-size: 7pt;
+      letter-spacing: 3px;
+      color: var(--pink);
+      text-transform: uppercase;
+      margin-bottom: 7px;
+    }
+    .section-heading {
+      font-family: 'Hammersmith One', sans-serif;
+      font-size: 18pt;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--white);
+      margin-bottom: 10px;
+    }
+
+    .rule {
+      height: 1px;
+      background: linear-gradient(90deg, var(--pink), var(--teal));
+      margin: 4px 0 8px;
+    }
+
+    /* BIO */
+    .bio-text {
+      font-size: 9pt;
+      line-height: 1.72;
+      color: var(--w80);
+      font-weight: 300;
+      margin-bottom: 10px;
+    }
+    .bio-text:last-child { margin-bottom: 0; }
+
+    /* LIVE */
+    .live-section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 0.26in 0.36in;
+      overflow: hidden;
+    }
+    .live-desc {
+      font-size: 8.5pt;
+      line-height: 1.6;
+      color: var(--w60);
+      font-style: italic;
+      margin-bottom: 14px;
+      flex-shrink: 0;
+    }
+    .live-photo {
+      height: 2.5in;
+      flex-shrink: 0;
+      position: relative;
+      overflow: hidden;
+      font-size: 0;
+    }
+    .live-photo img {
+      width: 100%;
+      height: 2.5in;
+      object-fit: cover;
+      object-position: center 18%;
+      display: block;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    @media screen {
+      .live-photo::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgba(5,1,33,0.55) 0%, transparent 60%);
+      }
+    }
+    .live-photo-caption {
+      position: absolute;
+      bottom: 12px;
+      left: 14px;
+      z-index: 1;
+      font-family: 'Hammersmith One', sans-serif;
+      font-size: 7pt;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--w60);
+    }
+
+/* HIGHLIGHTS */
+    .highlights-list { list-style: none; margin-top: 4px; }
+    .highlights-list li {
+      font-size: 8pt;
+      color: var(--w80);
+      padding: 5px 0;
+      border-bottom: 1px solid var(--w10);
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      line-height: 1.4;
+    }
+    .highlights-list li:last-child { border-bottom: none; }
+    .highlights-list li::before {
+      content: '—';
+      color: var(--teal);
+      flex-shrink: 0;
+      font-weight: 600;
+    }
+
+    /* MUSIC */
+    .music-card {
+      display: grid;
+      grid-template-columns: 0.8in 1fr;
+      gap: 14px;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .music-card:last-child { margin-bottom: 0; }
+    .music-art {
+      width: 0.8in;
+      height: 0.8in;
+      object-fit: cover;
+      display: block;
+    }
+    .music-title {
+      font-family: 'Hammersmith One', sans-serif;
+      font-size: 12pt;
+      color: var(--white);
+      margin-bottom: 4px;
+    }
+    .music-meta {
+      font-size: 8pt;
+      color: var(--w60);
+      margin-bottom: 7px;
+    }
+    .music-link {
+      font-family: 'Hammersmith One', sans-serif;
+      font-size: 7pt;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--teal);
+      text-decoration: none;
+    }
+
+    /* BOOKING */
+    .booking-row {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 5px;
+      align-items: flex-start;
+    }
+    .booking-row:last-child { margin-bottom: 0; }
+    .booking-label {
+      font-family: 'Hammersmith One', sans-serif;
+      font-size: 7pt;
+      letter-spacing: 2px;
+      color: var(--pink);
+      text-transform: uppercase;
+      min-width: 0.7in;
+      flex-shrink: 0;
+      padding-top: 1px;
+    }
+    .booking-value {
+      font-size: 8.5pt;
+      color: var(--w80);
+      line-height: 1.55;
+    }
+    .booking-value a { color: var(--teal); text-decoration: underline; }
+    .footer-text a { color: var(--teal); text-decoration: underline; }
+
+    /* TECH */
+    .tech-text {
+      font-size: 8pt;
+      font-style: italic;
+      color: rgba(255,255,255,0.4);
+      line-height: 1.65;
+    }
+
+    /* FOOTER */
+    .footer {
+      background: var(--navy-mid);
+      border-top: 1px solid var(--w10);
+      padding: 0.13in 0.4in;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 0.2in;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .footer-label {
+      font-family: 'Hammersmith One', sans-serif;
+      font-size: 6pt;
+      letter-spacing: 2px;
+      color: var(--pink);
+      text-transform: uppercase;
+      margin-bottom: 3px;
+    }
+    .footer-text {
+      font-size: 7pt;
+      color: var(--w60);
+      line-height: 1.6;
+    }
+
+    @media print {
+      html, body { width: 8.5in; height: 11in; }
+      .live-photo, .live-photo img {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+      img { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    }
+
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-logo">
+      <img src="Brand_Assets/Logo_Chrome_Horiz_NightTimeDrive.png" alt="NightTimeDrive">
+    </div>
+    <div class="header-right">
+      <p class="header-genre">Chicano Pop</p>
+      <p class="header-genre" style="font-size:7pt; color: rgba(255,255,255,0.5); margin-bottom:4px;">Soul &nbsp;·&nbsp; Funk &nbsp;·&nbsp; Alternative</p>
+      <p class="header-tagline">"Songs for the long way home."</p>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- LEFT -->
+    <div class="col-left">
+
+      <div class="section">
+        <p class="section-label">Artist Bio</p>
+        <h2 class="section-heading">NightTimeDrive</h2>
+        <div class="rule"></div>
+        <p class="bio-text">Born from the glow of Route 66 and rooted in the Southwest, NightTimeDrive creates Chicano Pop — soulful, instrument-forward alternative pop shaped by culture, atmosphere, and cinematic storytelling.</p>
+        <p class="bio-text">Built on a foundation of soul, the music blends warm musicianship with deliberate songwriting and layered, intentional production. The result carries the feeling of late-night drives through the city — reflective, expansive, and always moving forward.</p>
+        <p class="bio-text">NightTimeDrive operates as a focused creative collective, anchored by a consistent core while collaborating with select musicians and artists chosen to best serve each record. In doing so, the project continues to shape the sound and identity of Chicano Pop as a modern cultural voice.</p>
+        <div style="margin-top:14px; padding-top:12px; border-top:1px solid var(--w10);">
+          <p class="section-label" style="margin-bottom:6px;">Sounds Like</p>
+          <p style="font-size:8pt; color:var(--w80); line-height:1.6;">Anderson Paak &nbsp;·&nbsp; Bruno Mars &nbsp;·&nbsp; Al Green &nbsp;·&nbsp; Earth Wind &amp; Fire &nbsp;·&nbsp; Santana</p>
+        </div>
+      </div>
+
+      <div class="live-section">
+        <p class="section-label">Live Performance</p>
+        <p class="live-desc">NightTimeDrive delivers a fully live, immersive performance driven by real musicianship and cinematic intention.</p>
+        <div class="live-photo">
+          <img src="Brand_Assets/Pictures/NightTimeDrive Band Pic Print.jpg" alt="NightTimeDrive Press Photo">
+          <p class="live-photo-caption">NightTimeDrive &nbsp;·&nbsp; Press Photo</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT -->
+    <div class="col-right">
+
+      <div class="section">
+        <p class="section-label">Selected Highlights</p>
+        <ul class="highlights-list">
+          <li><a href="https://drive.google.com/file/d/1OAqcO20R0mwy0-87gnVRV92PW66bYNdO/view" target="_blank" style="color:var(--teal); text-decoration:underline;">▶ &nbsp;Watch Live Performance — Live @ Flamenco Works, Albuquerque NM</a></li>
+          <li>Based in Albuquerque, NM &amp; Nashville, TN</li>
+          <li>Independent creative collective</li>
+          <li>Fully live band performance</li>
+          <li>Actively booking regional shows</li>
+        </ul>
+      </div>
+
+      <div class="section">
+        <p class="section-label">Featured Music</p>
+        <div class="rule"></div>
+        <div class="music-card">
+          <img class="music-art" src="Brand_Assets/Pictures/Like It Like That Print.jpg" alt="Like It Like That">
+          <div>
+            <p class="music-title">Like It Like That</p>
+            <p class="music-meta">NightTimeDrive &nbsp;·&nbsp; 2025 &nbsp;·&nbsp; Independent</p>
+            <a class="music-link" href="https://open.spotify.com/track/7omfoTBckQbAjqes67RX1j">▶ &nbsp;Listen on Spotify</a>
+            <a class="music-link" href="https://youtu.be/ulHfK1iqYSw" style="display:block; margin-top:4px;">▶ &nbsp;Listen on YouTube</a>
+          </div>
+        </div>
+        <div class="music-card">
+          <img class="music-art" src="Brand_Assets/Pictures/Santa Fe Print.jpg" alt="Santa Fe">
+          <div>
+            <p class="music-title">Santa Fe</p>
+            <p class="music-meta">NightTimeDrive &nbsp;·&nbsp; 2025 &nbsp;·&nbsp; Independent</p>
+            <a class="music-link" href="https://open.spotify.com/track/0Zb6GwC9zHLPvRpsONcvtj">▶ &nbsp;Listen on Spotify</a>
+            <a class="music-link" href="https://www.youtube.com/watch?v=MFjTTgIMbS4" style="display:block; margin-top:4px;">▶ &nbsp;Listen on YouTube</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <p class="section-label">Booking &amp; Contact</p>
+        <div class="rule"></div>
+        <div class="booking-row">
+          <span class="booking-label">Contact</span>
+          <span class="booking-value">Lorenso Jaramillo</span>
+        </div>
+        <div class="booking-row">
+          <span class="booking-label">Email</span>
+          <span class="booking-value"><a href="mailto:NightTimeDrive@gmail.com">NightTimeDrive@gmail.com</a></span>
+        </div>
+        <div class="booking-row">
+          <span class="booking-label">Phone</span>
+          <span class="booking-value"><a href="tel:+15058181929">+1 (505) 818-1929</a></span>
+        </div>
+        <div class="booking-row">
+          <span class="booking-label">Website</span>
+          <span class="booking-value" style="font-size:10pt; font-weight:400;"><a href="https://nighttimedrive.com" target="_blank" rel="noopener">NightTimeDrive.com</a></span>
+        </div>
+        <div class="booking-row">
+          <span class="booking-label">Social</span>
+          <span class="booking-value">
+            <a class="social-app-link" href="https://instagram.com/NightTimeDriveMusic" target="_blank" rel="noopener">Instagram</a> &nbsp;·&nbsp;
+            <a class="social-app-link" href="https://youtube.com/@NightTimeDriveMusic" target="_blank" rel="noopener">YouTube</a> &nbsp;·&nbsp;
+            <a class="social-app-link" href="https://tiktok.com/@NightTimeDriveMusic" target="_blank" rel="noopener">TikTok</a> &nbsp;·&nbsp;
+            <a class="social-app-link" href="https://facebook.com/NightTimeDriveMusic" target="_blank" rel="noopener">Facebook</a>
+          </span>
+        </div>
+      </div>
+
+      <div class="section" style="flex:1; display:flex; flex-direction:column; gap:10px; justify-content:flex-start; padding-bottom: 0.09in;">
+        <div>
+          <p class="section-label">Technical Information</p>
+          <p class="tech-text">Input list and hospitality rider available upon request.</p>
+          <p class="tech-text" style="margin-top:5px;">Hi-res press photos available upon request.</p>
+          <p class="tech-text" style="margin-top:5px;"><a href="./downloads/NightTimeDrive_Stageplot.png" target="_blank" rel="noopener" style="color:var(--teal); text-decoration:underline;">View Stage Plot</a></p>
+        </div>
+        <div>
+          <p class="section-label">Representation</p>
+          <p class="tech-text">NightTimeDrive (Independent)</p>
+        </div>
+        <div>
+          <p class="section-label">Location</p>
+          <p class="tech-text">Albuquerque, NM &nbsp;/&nbsp; Nashville, TN</p>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+
+</div>
+
+<script>
+  document.querySelectorAll('.social-app-link[data-app]').forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const appUri = link.dataset.app;
+      const webUrl = link.href;
+      window.location.href = appUri;
+      const fallback = setTimeout(() => {
+        window.open(webUrl, '_blank', 'noopener');
+      }, 1200);
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) clearTimeout(fallback);
+      }, { once: true });
+    });
+  });
+
+  document.querySelectorAll('a[href*="open.spotify.com"]').forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const webUrl = link.href;
+      const trackId = webUrl.split('/track/')[1];
+      const appUri = 'spotify:track:' + trackId;
+      window.location.href = appUri;
+      const fallback = setTimeout(() => {
+        window.open(webUrl, '_blank', 'noopener');
+      }, 1200);
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) clearTimeout(fallback);
+      }, { once: true });
+    });
+  });
+</script>
+
+</body>
+</html>
