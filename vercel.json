@@ -1,7 +1,7 @@
 {
   "headers": [
     {
-      "source": "/Brand_Assets/(.*)",
+      "source": "/Brand_Assets/:path*",
       "headers": [
         {
           "key": "Cache-Control",
@@ -10,7 +10,7 @@
       ]
     },
     {
-      "source": "/downloads/(.*)",
+      "source": "/downloads/:path*",
       "headers": [
         {
           "key": "Cache-Control",
