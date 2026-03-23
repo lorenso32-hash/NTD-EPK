@@ -858,7 +858,7 @@
       <div class="video-embed-wrapper">
         <iframe
           id="live-video-iframe"
-          src="https://www.youtube.com/embed/DTVuilMSS0w"
+          data-src="https://www.youtube.com/embed/DTVuilMSS0w"
           title="NightTimeDrive — Live Performance"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
         </iframe>
@@ -1300,6 +1300,21 @@
 
     document.getElementById('hero-watch-btn').addEventListener('click', () => {
       document.getElementById('video').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    // Lazy-load YouTube iframe
+    const iframeObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const iframe = entry.target;
+          iframe.src = iframe.dataset.src;
+          iframeObserver.unobserve(iframe);
+        }
+      });
+    }, { rootMargin: '200px' });
+
+    document.querySelectorAll('iframe[data-src]').forEach(iframe => {
+      iframeObserver.observe(iframe);
     });
   </script>
 
