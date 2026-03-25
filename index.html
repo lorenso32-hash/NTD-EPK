@@ -576,7 +576,7 @@
     .bio-text {
       font-size: 16px; color: var(--white-80);
       line-height: 1.85; margin-bottom: 22px;
-      text-shadow: 0 0 24px rgba(0,180,204,0.18), 0 1px 4px rgba(0,0,0,0.6);
+      text-shadow: 0 0 20px rgba(0,180,204,0.45), 0 0 50px rgba(0,180,204,0.2), 0 1px 4px rgba(0,0,0,0.6);
     }
 
     /* =====================
@@ -824,7 +824,7 @@
 
       #bio {
         background-size: 160%;
-        background-position: 0% 10%;
+        background-position: 100% 10%;
         background-repeat: no-repeat;
       }
 
@@ -832,6 +832,8 @@
       .stream-links { justify-content: center; }
 
       .downloads-grid { grid-template-columns: 1fr 1fr; }
+      .dl-card { aspect-ratio: 1 / 1; padding: 28px 22px; overflow: hidden; }
+      .downloads-grid .dl-card:last-child { grid-column: 1 / -1; max-width: 50%; }
       .footer-inner { flex-direction: column; text-align: center; }
     }
 
