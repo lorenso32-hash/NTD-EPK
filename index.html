@@ -194,7 +194,7 @@
     .rule-star.center { margin-left: auto; margin-right: auto; }
 
     .brand-star { display: block; width: 18px; height: 18px; opacity: 0.65; flex-shrink: 0; }
-    .footer-star { display: block; width: 9px; height: 9px; opacity: 0.25; flex-shrink: 0; }
+    .footer-star { display: block; width: 9px; height: 9px; opacity: 0.7; flex-shrink: 0; filter: drop-shadow(0 0 4px rgba(0,180,204,0.7)); }
 
     /* =====================
        BUTTONS
@@ -797,10 +797,11 @@
     .social-link {
       font-family: var(--font-display);
       font-size: 11px; letter-spacing: 3px;
-      color: var(--white-20); text-decoration: none; text-transform: uppercase;
-      transition: color 0.2s;
+      color: var(--teal); text-decoration: none; text-transform: uppercase;
+      text-shadow: 0 0 10px rgba(0,180,204,0.6), 0 0 24px rgba(0,180,204,0.3);
+      transition: color 0.2s, text-shadow 0.2s;
     }
-    .social-link:hover { color: var(--teal); }
+    .social-link:hover { color: #fff; text-shadow: 0 0 12px rgba(0,180,204,1), 0 0 32px rgba(0,180,204,0.6); }
 
     /* =====================
        RESPONSIVE
@@ -1162,9 +1163,6 @@
   <!-- FOOTER -->
   <footer>
     <div class="footer-inner">
-      <div class="footer-logo">
-        <img src="Brand_Assets/Logo_Chrome_Horiz_NightTimeDrive.png" alt="NightTimeDrive" loading="lazy" decoding="async">
-      </div>
       <div class="footer-center">
         <div class="footer-contact">
           <a href="mailto:NightTimeDrive@gmail.com">NightTimeDrive@gmail.com</a>
