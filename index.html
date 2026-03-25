@@ -568,7 +568,7 @@
     #bio::before {
       content: '';
       position: absolute; inset: 0;
-      background: rgba(5,1,33,0.80);
+      background: rgba(5,1,33,0.65);
       z-index: 0;
     }
     #bio .container { position: relative; z-index: 1; }
@@ -576,6 +576,7 @@
     .bio-text {
       font-size: 16px; color: var(--white-80);
       line-height: 1.85; margin-bottom: 22px;
+      text-shadow: 0 0 24px rgba(0,180,204,0.18), 0 1px 4px rgba(0,0,0,0.6);
     }
 
     /* =====================
@@ -820,6 +821,12 @@
       .nav-cta { margin-left: 0; }
 
       .band-photo-wrap img { aspect-ratio: 4/3; object-position: center top; }
+
+      #bio {
+        background-size: 160%;
+        background-position: 5% 10%;
+        background-repeat: no-repeat;
+      }
 
       .music-grid { grid-template-columns: 1fr; }
       .stream-links { justify-content: center; }
