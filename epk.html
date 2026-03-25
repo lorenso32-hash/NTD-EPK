@@ -104,6 +104,7 @@
     .col-right {
       display: flex;
       flex-direction: column;
+      justify-content: space-between;
       overflow: hidden;
     }
 
@@ -112,7 +113,7 @@
       border-bottom: 1px solid var(--w10);
       flex-shrink: 0;
     }
-    .col-right .section { padding: 0.11in 0.3in; }
+    .col-right .section { padding: 0.17in 0.3in; }
 
     .section-label {
       font-family: 'Hammersmith One', sans-serif;
@@ -164,15 +165,14 @@
       flex-shrink: 0;
     }
     .live-photo {
-      height: 2.5in;
-      flex-shrink: 0;
+      flex: 1;
       position: relative;
       overflow: hidden;
       font-size: 0;
     }
     .live-photo img {
       width: 100%;
-      height: 2.5in;
+      height: 100%;
       object-fit: cover;
       object-position: center 18%;
       display: block;
@@ -202,9 +202,9 @@
 /* HIGHLIGHTS */
     .highlights-list { list-style: none; margin-top: 4px; }
     .highlights-list li {
-      font-size: 8pt;
+      font-size: 9pt;
       color: var(--w80);
-      padding: 5px 0;
+      padding: 7px 0;
       border-bottom: 1px solid var(--w10);
       display: flex;
       align-items: flex-start;
@@ -236,18 +236,18 @@
     }
     .music-title {
       font-family: 'Hammersmith One', sans-serif;
-      font-size: 12pt;
+      font-size: 13pt;
       color: var(--white);
       margin-bottom: 4px;
     }
     .music-meta {
-      font-size: 8pt;
+      font-size: 9pt;
       color: var(--w60);
-      margin-bottom: 7px;
+      margin-bottom: 9px;
     }
     .music-link {
       font-family: 'Hammersmith One', sans-serif;
-      font-size: 7pt;
+      font-size: 8pt;
       letter-spacing: 1px;
       text-transform: uppercase;
       color: var(--teal);
@@ -258,7 +258,7 @@
     .booking-row {
       display: flex;
       gap: 12px;
-      margin-bottom: 5px;
+      margin-bottom: 8px;
       align-items: flex-start;
     }
     .booking-row:last-child { margin-bottom: 0; }
@@ -273,7 +273,7 @@
       padding-top: 1px;
     }
     .booking-value {
-      font-size: 8.5pt;
+      font-size: 9.5pt;
       color: var(--w80);
       line-height: 1.55;
     }
@@ -282,7 +282,7 @@
 
     /* TECH */
     .tech-text {
-      font-size: 8pt;
+      font-size: 9pt;
       font-style: italic;
       color: rgba(255,255,255,0.4);
       line-height: 1.65;
@@ -354,7 +354,7 @@
         <p class="bio-text">NightTimeDrive operates as a focused creative collective, anchored by a consistent core while collaborating with select musicians and artists chosen to best serve each record. In doing so, the project continues to shape the sound and identity of Chicano Pop as a modern cultural voice.</p>
         <div style="margin-top:14px; padding-top:12px; border-top:1px solid var(--w10);">
           <p class="section-label" style="margin-bottom:6px;">Sounds Like</p>
-          <p style="font-size:8pt; color:var(--w80); line-height:1.6;">Anderson Paak &nbsp;·&nbsp; Bruno Mars &nbsp;·&nbsp; Al Green &nbsp;·&nbsp; Earth Wind &amp; Fire &nbsp;·&nbsp; Santana</p>
+          <p style="font-size:8pt; color:var(--w80); line-height:1.6;">Al Green &nbsp;·&nbsp; Bruno Mars &nbsp;·&nbsp; Earth Wind &amp; Fire &nbsp;·&nbsp; Santana &nbsp;·&nbsp; Anderson Paak</p>
         </div>
       </div>
 
@@ -375,7 +375,7 @@
       <div class="section">
         <p class="section-label">Selected Highlights</p>
         <ul class="highlights-list">
-          <li><a href="https://drive.google.com/file/d/1OAqcO20R0mwy0-87gnVRV92PW66bYNdO/view" target="_blank" style="color:var(--teal); text-decoration:underline;">▶ &nbsp;Watch Live Performance — Live @ Flamenco Works, Albuquerque NM</a></li>
+          <li><a href="https://youtu.be/DTVuilMSS0w" target="_blank" style="color:var(--teal); text-decoration:underline;">▶ &nbsp;Watch Live Performance — Live @ Flamenco Works, Albuquerque NM</a></li>
           <li>Based in Albuquerque, NM &amp; Nashville, TN</li>
           <li>Independent creative collective</li>
           <li>Fully live band performance</li>
@@ -436,7 +436,7 @@
         </div>
       </div>
 
-      <div class="section" style="flex:1; display:flex; flex-direction:column; gap:10px; justify-content:flex-start; padding-bottom: 0.09in;">
+      <div class="section" style="display:flex; flex-direction:column; gap:16px; justify-content:flex-start; padding-bottom: 0.2in;">
         <div>
           <p class="section-label">Technical Information</p>
           <p class="tech-text">Input list and hospitality rider available upon request.</p>
