@@ -339,8 +339,18 @@
       align-items: center; justify-content: center;
       text-align: center;
       padding: 80px var(--pad-x);
-      position: relative; overflow: hidden;
+      position: relative; overflow: hidden; isolation: isolate;
       background: radial-gradient(ellipse 70% 55% at 50% 62%, #0e0440 0%, var(--navy) 65%);
+    }
+    /* Box is sized to the photo so the whole band stays visible at every width */
+    #hero::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; z-index: -1;
+      aspect-ratio: 6789 / 3819;
+      background: url('https://res.cloudinary.com/diitxd6ou/image/upload/w_1920,f_auto,q_auto/ntd_live_pic_sdtjjo') center / cover no-repeat;
+      opacity: 0.2;
+      -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 72%, transparent 100%);
+      mask-image: linear-gradient(to bottom, #000 0%, #000 72%, transparent 100%);
+      pointer-events: none;
     }
     #hero::after {
       content: ''; position: absolute;
@@ -353,10 +363,13 @@
       position: relative; z-index: 1;
       width: 100%; max-width: 560px; margin-bottom: 36px;
     }
+    .hero-logo a { display: block; }
     .hero-logo img {
       width: 100%; height: auto;
       filter: drop-shadow(0 0 24px rgba(255,255,255,0.12));
+      transition: filter 0.3s ease;
     }
+    .hero-logo a:hover img { filter: drop-shadow(0 0 30px rgba(255,255,255,0.4)); }
     .hero-genre {
       position: relative; z-index: 1;
       font-family: var(--font-display);
@@ -442,60 +455,31 @@
       margin: 44px auto 0;
     }
 
+    .marquee-bulb.sm { --star: 28px; }
     @keyframes bulb-breathe {
-      0%, 100% {
-        opacity: 0.25;
-        box-shadow: 0 0 3px 1px rgba(226,16,86,0.3), 0 0 6px 2px rgba(226,16,86,0.1);
-      }
-      50% {
-        opacity: 1;
-        box-shadow: 0 0 6px 2px rgba(226,16,86,1), 0 0 14px 5px rgba(226,16,86,0.55), 0 0 28px 8px rgba(226,16,86,0.2);
-      }
-    }
-
-    /* ── CROWN ── */
-    .marquee-crown {
-      position: relative;
-      background: var(--navy-mid);
-      border: 2px solid rgba(255,255,255,0.08);
-      border-bottom: 1px solid rgba(0,180,204,0.15);
-      padding: 10px 0 12px;
-    }
-    .crown-bulb-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .crown-bulb {
-      /* size set per-bulb via JS */
-      border-radius: 50%;
-      flex-shrink: 0;
-      background: radial-gradient(circle at 36% 32%, #ffb0c8, #E21056 50%, #8a0030 80%, #300010);
-      animation: bulb-breathe 3s ease-in-out infinite;
-    }
-
-    /* ── BODY WRAPPER (sign + board, bulbs go here) ── */
-    .marquee-body {
-      position: relative;
-      border-left:  2px solid rgba(255,255,255,0.08);
-      border-right: 2px solid rgba(255,255,255,0.08);
-      border-bottom: none;
+      0%, 100% { opacity: calc(var(--fade, 1) * 0.2); transform: scale(0.85); }
+      50%       { opacity: var(--fade, 1); transform: scale(1.1); }
     }
 
     /* ── MAIN SIGN PANEL ── */
     .marquee-sign {
-      background: var(--navy);
-      padding: 24px 56px 20px;
+      padding: 96px 72px 28px;
       text-align: center;
-      box-shadow: inset 0 0 60px rgba(0,180,204,0.04);
     }
+    #video { overflow: hidden; }
+    .star-stage { position: relative; padding: 0 28px; }
+    .marquee-logo-wrap { position: relative; max-width: 640px; margin: 0 auto; }
+    .marquee-logo { display: block; width: 100%; height: auto; }
     .marquee-bulbs { position: absolute; inset: 0; pointer-events: none; }
     .marquee-bulb {
       position: absolute;
-      /* size set per-bulb via JS */
-      border-radius: 50%;
-      background: radial-gradient(circle at 35% 30%, #ffb0c8, #E21056 55%, #6a001e);
-      animation: bulb-breathe 3s ease-in-out infinite;
+      /* image has the glow baked in, star fills 96/256 of it, so the box is 2.67x the star */
+      --size: calc(var(--star, 36px) * var(--shrink, 1) * 2.67);
+      width: var(--size); height: var(--size);
+      margin: calc(var(--size) / -2) 0 0 calc(var(--size) / -2);
+      background: url('Brand_Assets/Star_Chrome_Glow.webp') center / contain no-repeat;
+      will-change: opacity, transform;
+      animation: bulb-breathe 5s ease-in-out infinite;
     }
     .marquee-title {
       font-family: var(--font-display);
@@ -574,6 +558,81 @@
     }
     #bio .container { position: relative; z-index: 1; }
     .bio-text-block { max-width: 720px; margin: 0 auto; }
+    /* =====================
+       PRESS PHOTOS
+    ===================== */
+    #press { text-align: center; }
+    #press .rule-star { justify-content: center; }
+    .press-carousel { position: relative; z-index: 2; margin-top: 40px; }
+    .press-track {
+      display: flex; gap: 14px; overflow-x: auto;
+      scroll-snap-type: x mandatory; scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch; scrollbar-width: none;
+    }
+    .press-track::-webkit-scrollbar { display: none; }
+    .press-slide {
+      position: relative; flex: 0 0 auto; height: 360px; max-width: 86vw;
+      scroll-snap-align: center;
+      border: 1px solid rgba(0,180,204,0.5);
+      background: var(--navy-light);
+    }
+    .press-slide:first-child { margin-left: auto; }
+    .press-slide:last-child { margin-right: auto; }
+    .press-slide img { display: block; width: auto; height: 100%; max-width: 100%; object-fit: cover; }
+    .press-arrow {
+      position: absolute; top: 50%; transform: translateY(-50%); z-index: 2;
+      width: 44px; height: 44px; cursor: pointer; font-size: 20px;
+      color: var(--teal); background: rgba(5,1,33,0.85); border: 1px solid var(--teal);
+    }
+    .press-arrow.prev { left: 8px; }
+    .press-arrow.next { right: 8px; }
+    .press-arrow[hidden] { display: none; }
+    .press-hint {
+      margin-top: 14px; font-family: var(--font-display);
+      font-size: 13px; letter-spacing: 3px; color: var(--white-60);
+    }
+    .press-hint[hidden] { display: none; }
+    .press-cta { margin-top: 32px; }
+    .press-dl {
+      position: absolute; right: 10px; bottom: 10px; padding: 9px 12px;
+      font-family: var(--font-display); font-size: 13px; letter-spacing: 2px;
+      color: var(--white); text-decoration: none;
+      background: rgba(5,1,33,0.85); border: 1px solid var(--teal);
+    }
+    .press-note { display: none; margin-top: 14px; font-size: 12px; color: var(--white-60); }
+    .press-dl:hover { background: var(--teal); color: var(--navy); }
+    @media (max-width: 860px) {
+      #hero::before {
+        background-image: url('https://res.cloudinary.com/diitxd6ou/image/upload/w_1000,f_auto,q_auto/ntd_live_pic_sdtjjo');
+      }
+      .hero-social { gap: 22px; }
+      .hero-social a svg { width: 36px; height: 36px; }
+      .press-slide { height: 240px; }
+      .star-stage { padding: 0 16px; }
+      .marquee-sign { padding: 60px 18px 20px; }
+      .marquee-bulb { --star: 24px; }
+      .marquee-bulb.sm { --star: 19px; }
+      .press-note { display: block; }
+      .press-arrow { display: none; }
+    }
+
+    .sounds-like { margin-top: 48px; text-align: center; }
+    .sounds-like-label {
+      font-family: var(--font-display);
+      font-size: clamp(1.6rem, 4vw, 2.2rem); letter-spacing: 6px; text-transform: uppercase;
+      color: var(--teal); margin-bottom: 12px;
+      animation: teal-glow-breathe 4s ease-in-out infinite;
+    }
+    .sounds-like-list {
+      font-size: clamp(1.15rem, 3vw, 1.5rem); line-height: 1.7; letter-spacing: 1px;
+      color: var(--white);
+      animation: white-glow-breathe 4s ease-in-out infinite;
+    }
+    .sounds-like-list span { white-space: nowrap; }
+    @keyframes teal-glow-breathe {
+      0%, 100% { text-shadow: 0 0 4px rgba(0,180,204,0.4), 0 0 12px rgba(0,180,204,0.15); }
+      50%       { text-shadow: 0 0 8px rgba(0,180,204,0.9), 0 0 22px rgba(0,180,204,0.55), 0 0 40px rgba(0,180,204,0.25); }
+    }
     .bio-text {
       font-size: 16px; color: var(--white-80);
       line-height: 1.85; margin-bottom: 22px;
@@ -751,7 +810,7 @@
        DOWNLOADS
     ===================== */
     .downloads-grid {
-      display: grid; grid-template-columns: 1fr 1fr 1fr;
+      display: grid; grid-template-columns: 1fr 1fr;
       gap: 2px; margin-top: 48px;
     }
     .dl-card {
@@ -766,7 +825,7 @@
     .dl-eyebrow { font-family: var(--font-display); font-size: 11px; letter-spacing: 4px; color: var(--teal); }
     .dl-title { font-family: var(--font-serif); font-size: 1.6rem; font-weight: 700; color: var(--white); }
     .dl-description { font-size: 14px; color: var(--white-60); line-height: 1.7; }
-    .dl-arrow { margin-top: 16px; font-size: 28px; color: var(--white-20); transition: all 0.3s ease; }
+    .dl-arrow { margin-top: auto; padding-top: 16px; font-size: 28px; color: var(--white-20); transition: all 0.3s ease; }
 
     /* =====================
        FOOTER
@@ -833,16 +892,15 @@
       .music-grid { grid-template-columns: 1fr; }
       .stream-links { justify-content: center; }
 
-      .downloads-grid { grid-template-columns: 1fr 1fr; }
+      .downloads-grid { grid-template-columns: 1fr 1fr; grid-auto-rows: 1fr; }
       #downloads .eyebrow { text-align: center; font-size: 18px; letter-spacing: 4px; }
       #downloads .section-heading { text-align: center; }
-      #downloads .rule-star { text-align: center; }
-      .dl-card { aspect-ratio: 1 / 1; padding: 20px 16px; overflow: hidden; }
-      .dl-eyebrow { font-size: 18px; letter-spacing: 2px; }
-      .dl-title { font-size: 0.95rem; }
-      .dl-description { font-size: 10px; line-height: 1.5; }
-      .dl-arrow { font-size: 20px; margin-top: 8px; }
-      .downloads-grid .dl-card:last-child { grid-column: 1 / -1; max-width: 50%; margin: 0 auto; }
+      #downloads .rule-star { margin-left: auto; margin-right: auto; }
+      .dl-card { padding: 20px 10px 16px; align-items: center; text-align: center; gap: 8px; }
+      .dl-eyebrow { font-size: 12px; letter-spacing: 1.5px; white-space: nowrap; }
+      .dl-title { font-size: 1rem; line-height: 1.3; min-height: 2.6em; display: flex; align-items: center; }
+      .dl-description { font-size: 11px; line-height: 1.5; }
+      .dl-arrow { font-size: 20px; padding-top: 8px; }
       .footer-inner { flex-direction: column; text-align: center; }
       .footer-star { display: none; }
     }
@@ -862,7 +920,7 @@
   <!-- NAV -->
   <nav class="site-nav" id="site-nav">
     <div class="nav-inner">
-      <a href="#hero" class="nav-logo">
+      <a href="#video" class="nav-logo" data-play-first-video aria-label="Watch NightTimeDrive live">
         <img src="Brand_Assets/Logo_Chrome_Horiz_NightTimeDrive.png" alt="NightTimeDrive" fetchpriority="high">
       </a>
       <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
@@ -872,6 +930,7 @@
         <a href="#video"     class="nav-link">Watch</a>
         <a href="#music"     class="nav-link">Music</a>
         <a href="#bio"       class="nav-link">Bio</a>
+        <a href="#press"     class="nav-link">Press Photos</a>
         <a href="#downloads" class="nav-link">Downloads</a>
         <a href="#booking"   class="btn btn-primary nav-cta">Book Now</a>
       </div>
@@ -884,11 +943,13 @@
   ================================================ -->
   <section id="hero">
     <div class="hero-logo">
-      <img src="Brand_Assets/Logo_Chrome_Vert_NightTimeDrive.png" alt="NightTimeDrive" loading="eager" fetchpriority="high">
+      <a href="#video" data-play-first-video aria-label="Watch NightTimeDrive live">
+        <img src="Brand_Assets/Logo_Chrome_Vert_NightTimeDrive.png" alt="NightTimeDrive" loading="eager" fetchpriority="high">
+      </a>
     </div>
     <p class="hero-genre">Chicano Pop</p>
     <p class="hero-subgenre">Soul &nbsp;·&nbsp; Funk &nbsp;·&nbsp; Alternative</p>
-    <p class="hero-location">Albuquerque, NM &nbsp;/&nbsp; Nashville, TN</p>
+    <p class="hero-location">Albuquerque, NM</p>
     <div class="hero-preview">
       <button class="hero-watch-btn" id="hero-watch-btn" aria-label="Watch live performance">
         <svg viewBox="0 0 24 24" width="16" height="16" style="flex-shrink:0;"><polygon points="5,3 19,12 5,21" fill="currentColor"/></svg>
@@ -937,26 +998,31 @@
       <h2 class="section-heading" style="text-align:center;">Watch the Show</h2>
       <div class="rule-star center"><img src="Brand_Assets/Single Chrome Star 01 Artboard 1.png" alt="" loading="lazy" decoding="async"></div>
 
+      <div class="star-stage" id="star-stage">
+      <div class="marquee-bulbs" id="marquee-bulbs" aria-hidden="true"></div>
+
       <div class="marquee-wrap">
 
-        <!-- Crown with large decorative bulbs -->
-        <div class="marquee-crown">
-          <div class="crown-bulb-row" id="crown-bulb-row" aria-hidden="true"></div>
-        </div>
-
-        <!-- Body: sign + board wrapped together with perimeter bulbs -->
-        <div class="marquee-body" id="marquee-body">
-          <div class="marquee-bulbs" id="marquee-bulbs" aria-hidden="true"></div>
-
-          <div class="marquee-sign">
-            <p class="marquee-title">NightTimeDrive</p>
-            <p class="marquee-presents">P &thinsp; R &thinsp; E &thinsp; S &thinsp; E &thinsp; N &thinsp; T &thinsp; S</p>
+        <div class="marquee-sign">
+          <div class="marquee-logo-wrap">
+            <img class="marquee-logo" src="Brand_Assets/Logo_Chrome_Presents_NightTimeDrive.webp" width="1400" height="479" alt="NightTimeDrive Presents" loading="lazy" decoding="async">
           </div>
         </div>
 
       </div>
 
       <div class="video-embed-wrapper">
+        <iframe
+          id="first-live-video"
+          data-src="https://www.youtube.com/embed/VKYjEEbQwok"
+          title="NightTimeDrive ft. Jawny BadLuck &amp; Danny Roses — Santa Fe, Live at Flamenco Works"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+        </iframe>
+      </div>
+
+      <p class="video-caption">Santa Fe ft. Jawny BadLuck &amp; Danny Roses — Live at Flamenco Works</p>
+
+      <div class="video-embed-wrapper" style="margin-top: 40px;">
         <iframe
           id="live-video-iframe"
           data-src="https://www.youtube.com/embed/DTVuilMSS0w"
@@ -967,17 +1033,18 @@
 
       <p class="video-caption">Shot and produced by the NightTimeDrive Collective</p>
 
-      <p class="eyebrow" style="text-align:center; margin-top: 56px; font-size: 20px; letter-spacing: 6px;">Unreleased</p>
+      <p class="eyebrow" style="text-align:center; margin-top: 56px; font-size: 20px; letter-spacing: 6px;">Out Now</p>
 
       <div class="video-embed-wrapper">
         <iframe
-          data-src="https://www.youtube.com/embed/c1NeaZML4LY"
+          data-src="https://www.youtube.com/embed/R1jD9i5ejYE"
           title="Like It Like That — Official Music Video"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
         </iframe>
       </div>
 
       <p class="video-caption">Like It Like That — Official Music Video</p>
+      </div>
     </div>
   </section>
 
@@ -1018,11 +1085,41 @@
           sound and identity of Chicano Pop as a modern cultural voice.
         </p>
 
-        <p style="font-size: 12px; letter-spacing: 4px; text-transform: uppercase; color: var(--teal); margin-bottom: 10px; font-family: var(--font-display);">Sounds Like</p>
-        <p style="font-size: 15px; color: var(--white-60); letter-spacing: 1px;">Al Green &nbsp;·&nbsp; Bruno Mars &nbsp;·&nbsp; Earth Wind &amp; Fire &nbsp;·&nbsp; Santana &nbsp;·&nbsp; Anderson Paak</p>
+        <div class="sounds-like">
+          <p class="sounds-like-label">Sounds Like</p>
+          <p class="sounds-like-list"><span>Al Green</span> &nbsp;·&nbsp; <span>Bruno Mars</span> &nbsp;·&nbsp; <span>Cuco</span> &nbsp;·&nbsp; <span>Santana</span> &nbsp;·&nbsp; <span>WAR</span></p>
+        </div>
       </div>
     </div>
   </section>
+
+  <div class="pinstripe"></div>
+
+  <!-- ================================================
+       PRESS PHOTOS — previews and full-size downloads from Cloudinary
+       Photos + zip link live in the PRESS_PHOTOS / PRESS_ZIP_URL JS consts
+  ================================================ -->
+  <section id="press">
+    <div class="container">
+      <p class="eyebrow">For Press &amp; Promoters</p>
+      <h2 class="section-heading">Press Photos</h2>
+      <div class="rule-star center"><img src="Brand_Assets/Single Chrome Star 01 Artboard 1.png" alt="" loading="lazy" decoding="async"></div>
+
+      <div class="press-carousel">
+        <button class="press-arrow prev" type="button" aria-label="Previous photo" hidden>&#8592;</button>
+        <div class="press-track" id="press-track" tabindex="0" aria-label="Press photo previews"></div>
+        <button class="press-arrow next" type="button" aria-label="Next photo" hidden>&#8594;</button>
+      </div>
+      <p class="press-hint" id="press-hint" hidden>Swipe &#8594;</p>
+
+      <div class="press-cta">
+        <a class="btn btn-outline-teal" data-press-zip>&#8595;&nbsp;&nbsp;Download All Photos (69 MB)</a>
+        <p class="press-note">On iPhone, the zip saves to your Files app. Tap it to unzip.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="pinstripe"></div>
 
   <!-- ================================================
        MUSIC
@@ -1154,6 +1251,15 @@
           <div class="dl-arrow">&#8595;</div>
         </a>
 
+        <a class="dl-card" data-press-zip>
+          <div class="dl-eyebrow">Press Photos</div>
+          <div class="dl-title">Download Press Photos</div>
+          <div class="dl-description">
+            All 11 full-size press photos in one zip file (69 MB).
+          </div>
+          <div class="dl-arrow">&#8595;</div>
+        </a>
+
         <a href="./downloads/NightTimeDrive_Stageplot.png" class="dl-card" download>
           <div class="dl-eyebrow">Technical Document</div>
           <div class="dl-title">Stage Plot</div>
@@ -1266,68 +1372,92 @@
 
     /* Marquee sign bulbs */
     (function () {
+      /* Star border: squared top edge whose corners fan up and out, then down both sides
+         of the video frames, fading out by the last one. Phones get plain square corners.
+         Built as the right half + mirror. */
+      function chaikinOpen(pts, rounds) {
+        for (let r = 0; r < rounds; r++) {
+          const next = [pts[0]];
+          for (let i = 0; i < pts.length - 1; i++) {
+            const [x, y] = pts[i], [nx, ny] = pts[i + 1];
+            next.push([x * 0.75 + nx * 0.25, y * 0.75 + ny * 0.25], [x * 0.25 + nx * 0.75, y * 0.25 + ny * 0.75]);
+          }
+          next.push(pts[pts.length - 1]);
+          pts = next;
+        }
+        return pts;
+      }
+
+      /* Evenly spaced points along a line, always including both ends */
+      function sample(line, spacing) {
+        const dist = [0];
+        for (let i = 1; i < line.length; i++)
+          dist.push(dist[i - 1] + Math.hypot(line[i][0] - line[i - 1][0], line[i][1] - line[i - 1][1]));
+        const total = dist[dist.length - 1];
+        const n = Math.max(1, Math.round(total / spacing));
+        const out = [];
+        let seg = 0;
+        for (let i = 0; i <= n; i++) {
+          const at = total * i / n;
+          while (seg < line.length - 2 && dist[seg + 1] < at) seg++;
+          const f = (at - dist[seg]) / ((dist[seg + 1] - dist[seg]) || 1);
+          out.push([line[seg][0] + f * (line[seg + 1][0] - line[seg][0]), line[seg][1] + f * (line[seg + 1][1] - line[seg][1])]);
+        }
+        return out;
+      }
+
       function buildMarquee() {
-        const wrap      = document.querySelector('.marquee-wrap');
+        const stage = document.getElementById('star-stage');
         const container = document.getElementById('marquee-bulbs');
-        const crownRow  = document.getElementById('crown-bulb-row');
-        if (!container || !crownRow || !wrap) return;
+        const logo = stage && stage.querySelector('.marquee-logo');
+        const frames = stage && stage.querySelectorAll('.video-embed-wrapper');
+        if (!container || !logo || !frames.length) return;
 
-        /* ── CROWN: more bulbs, large at corners → small in middle ── */
-        const crownW   = wrap.offsetWidth;
-        const numCrown = Math.max(14, Math.floor(crownW / 46));
-        const crownMax = 26, crownMin = 13;
-        crownRow.innerHTML = '';
-        for (let i = 0; i < numCrown; i++) {
-          const tEdge = 1 - Math.abs(i - (numCrown-1)/2) / ((numCrown-1)/2); // 0 at edges, 1 at center
-          const size  = Math.round(crownMax - (crownMax - crownMin) * tEdge);
-          const b = document.createElement('span');
-          b.className = 'crown-bulb';
-          b.style.width  = size + 'px';
-          b.style.height = size + 'px';
-          b.style.animationDelay = ((i / numCrown) * 3).toFixed(2) + 's';
-          crownRow.appendChild(b);
-        }
+        const mobile = window.innerWidth <= 860;
+        const origin = stage.getBoundingClientRect();
+        const lr = logo.getBoundingClientRect();
+        const first = frames[0].getBoundingClientRect();
+        const last = frames[frames.length - 1].getBoundingClientRect();
+        const cx = (lr.left + lr.right) / 2 - origin.left;
+        const sideX = first.right - origin.left + (mobile ? 24 : 46);
+        const topY = lr.top - origin.top - (mobile ? 30 : 48);
+        const end = last.bottom - origin.top;
+        const room = document.documentElement.clientWidth - origin.left - sideX - 22;
+        const tipX = mobile ? sideX : sideX + Math.max(0, Math.min(30, room));
+        const tipY = mobile ? topY : topY - 36;
+        const spacing = mobile ? 78 : 112;
 
-        /* ── BODY: sides start at top, bulbs shrink as they go down ── */
-        const body = document.getElementById('marquee-body');
-        if (!body) return;
-        const W = body.offsetWidth, H = body.offsetHeight;
-        const EDGE = 10;
-
-        const hCount = Math.max(4, Math.round(W / 88));
-        const vCount = Math.max(3, Math.round(H / 28));
-        const sideMax = 9, sideMin = 5, botSize = 5;
-
-        // [x, y, size] — right side top→bottom
-        const positions = [];
-        for (let i = 0; i < vCount; i++) {
-          const t    = i / (vCount - 1);
-          const size = Math.round(sideMax - (sideMax - sideMin) * t);
-          const y    = EDGE + t * (H - 2*EDGE);
-          positions.push([W - EDGE, y, size]);
-        }
-        // Bottom R→L
-        for (let i = hCount - 1; i >= 0; i--)
-          positions.push([EDGE + (i / (hCount - 1)) * (W - 2*EDGE), H - EDGE, botSize]);
-        // Left side bottom→top (reversed so animation flows clockwise)
-        for (let i = vCount - 1; i >= 0; i--) {
-          const t    = i / (vCount - 1);
-          const size = Math.round(sideMax - (sideMax - sideMin) * t);
-          const y    = EDGE + t * (H - 2*EDGE);
-          positions.push([EDGE, y, size]);
-        }
+        const topLine = mobile ? [[cx, topY], [tipX, tipY]] : chaikinOpen([[cx, topY], [cx + (tipX - cx) * 0.66, topY], [tipX, tipY]], 3);
+        const sideLine = mobile ? [[tipX, tipY], [sideX, end]] : chaikinOpen([[tipX, tipY], [sideX, tipY + 90], [sideX, end]], 3);
+        const topRow = sample(topLine, spacing);
+        const sideRow = sample(sideLine, spacing).slice(1);
+        const points = [...topRow, ...sideRow];
+        const tip = topRow.length - 1;
 
         container.innerHTML = '';
-        positions.forEach(([x, y, size], i, all) => {
+        const addStar = (x, y, i, t) => {
+          const tail = Math.max(0, (t - 0.5) / 0.5);
           const b = document.createElement('span');
-          b.className = 'marquee-bulb';
-          b.style.width  = size + 'px';
-          b.style.height = size + 'px';
-          b.style.left = (x - size/2) + 'px';
-          b.style.top  = (y - size/2) + 'px';
-          b.style.animationDelay = ((i / all.length) * 3).toFixed(2) + 's';
+          b.className = 'marquee-bulb' + (i !== tip && (i - tip) % 2 ? ' sm' : '');
+          b.style.left = x + 'px';
+          b.style.top  = y + 'px';
+          b.style.setProperty('--fade', (1 - tail * 0.88).toFixed(2));
+          b.style.setProperty('--shrink', (1 - tail * 0.45).toFixed(2));
+          b.style.animationDelay = (t * 5).toFixed(2) + 's';
           container.appendChild(b);
+        };
+
+        points.forEach(([x, y], i) => {
+          const t = i / (points.length - 1);
+          addStar(x, y, i, t);
+          if (i > 0) addStar(2 * cx - x, y, i, t);
         });
+      }
+
+      if (window.ResizeObserver) {
+        let raf = 0;
+        new ResizeObserver(() => { cancelAnimationFrame(raf); raf = requestAnimationFrame(buildMarquee); })
+          .observe(document.getElementById('star-stage'));
       }
 
       if (document.readyState === 'complete') { buildMarquee(); }
@@ -1446,6 +1576,98 @@
         }
       });
     }, { rootMargin: '200px' });
+
+    /* Nav + hero logos: scroll to the first live video. On desktop they also start it through
+       the YouTube player API (retrying muted if sound is blocked). Do not use ?autoplay=1 here,
+       it gave a grey screen on this site. Touch devices keep the plain embed and only scroll:
+       with the player API on, the embed showed "An error occurred" on iPhone (exact cause not confirmed). */
+    (function initLogoPlay() {
+      const frame = document.getElementById('first-live-video');
+      const YT = 'https://www.youtube.com';
+      const canAutoplay = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+      if (canAutoplay) frame.dataset.src += '?enablejsapi=1';
+      const post = msg => frame.contentWindow && frame.contentWindow.postMessage(JSON.stringify(msg), YT);
+      const command = func => post({ event: 'command', func, args: [] });
+      let playing = false;
+
+      window.addEventListener('message', e => {
+        if (e.origin !== YT || e.source !== frame.contentWindow) return;
+        try {
+          const data = JSON.parse(e.data);
+          if (data.info && data.info.playerState === 1) playing = true;
+        } catch (err) { /* not a player message */ }
+      });
+
+      const playFirstVideo = e => {
+        e.preventDefault();
+        frame.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        if (!frame.getAttribute('src')) {
+          frame.src = frame.dataset.src;
+          iframeObserver.unobserve(frame);
+        }
+        if (!canAutoplay) return;
+        playing = false;
+        let tries = 0;
+        const timer = setInterval(() => {
+          tries++;
+          if (playing || tries > 25) { clearInterval(timer); return; }
+          post({ event: 'listening', id: 'first-live-video' });
+          if (tries === 10) command('mute');
+          command('playVideo');
+        }, 400);
+      };
+
+      document.querySelectorAll('[data-play-first-video]').forEach(a => a.addEventListener('click', playFirstVideo));
+    })();
+
+    /* Press photos: add one line per photo. If the list changes, regenerate PRESS_ZIP_URL:
+       cd "Luz By LJ" && python3 tools/generate_archive_url.py NightTimeDrive_Press_Photos never <ids...> */
+    const PRESS_ZIP_URL = 'https://api.cloudinary.com/v1_1/diitxd6ou/image/generate_archive?expires_at=9999999999&mode=download&public_ids%5B%5D=ntd_live_pic11-2_ffpiym&public_ids%5B%5D=ntd_live_pic_sdtjjo&public_ids%5B%5D=ntd_live_pic5_lkjsnk&public_ids%5B%5D=ntd_live_pic3_i2wd6t&public_ids%5B%5D=ntd_live_pic9_dmuqsl&public_ids%5B%5D=ntd_live_pic6_yyqsla&public_ids%5B%5D=ntd_live_pic7_oq97ih&public_ids%5B%5D=NTD_Press_Pic-3_fcsjw2&public_ids%5B%5D=NTD_Press_Pic-2_mn1bdf&public_ids%5B%5D=SVB07777_tc0nl3&public_ids%5B%5D=NTD%2FPress%2FNightTimeDrive_Band_Pic&target_format=zip&target_public_id=NightTimeDrive_Press_Photos&timestamp=1793924408&signature=8e59d3300fc3096d468e994bf72f4d78fc975bfa&api_key=713587951621493';
+    const PRESS_PHOTOS = [
+      { id: 'ntd_live_pic11-2_ffpiym', w: 6952, h: 3911, alt: 'NightTimeDrive performing live, singer in a NightTimeDrive cap with keys and drums behind' },
+      { id: 'ntd_live_pic_sdtjjo', w: 6789, h: 3819, alt: 'NightTimeDrive singer at the mic with the band behind, live in a pink-lit room' },
+      { id: 'ntd_live_pic5_lkjsnk', w: 6682, h: 3759, alt: 'NightTimeDrive singer and trombone player performing live against a brick wall' },
+      { id: 'ntd_live_pic3_i2wd6t', w: 5394, h: 3034, alt: 'NightTimeDrive keyboard player performing on a red Nord Stage 4' },
+      { id: 'ntd_live_pic9_dmuqsl', w: 3601, h: 2026, alt: 'NightTimeDrive drummer playing to a crowd under blue stage lights' },
+      { id: 'ntd_live_pic6_yyqsla', w: 1951, h: 1951, alt: 'Close-up of the NightTimeDrive singer performing with a microphone' },
+      { id: 'ntd_live_pic7_oq97ih', w: 6874, h: 3867, alt: 'NightTimeDrive singer in a NightTimeDrive cap singing into a microphone' },
+      { id: 'NTD_Press_Pic-3_fcsjw2', w: 7022, h: 3950, alt: 'NightTimeDrive trombone player performing at a microphone against a brick wall' },
+      { id: 'NTD_Press_Pic-2_mn1bdf', w: 6508, h: 3661, alt: 'NightTimeDrive drummer and percussionist performing live' },
+      { id: 'SVB07777_tc0nl3', w: 4117, h: 4117, alt: 'NightTimeDrive portrait in a NightTimeDrive cap, crouched against a white brick wall' },
+      { id: 'NTD/Press/NightTimeDrive_Band_Pic', w: 2000, h: 1333, alt: 'NightTimeDrive press photo: band member overlooking a city skyline at night' },
+    ];
+
+    (function initPress() {
+      const track = document.getElementById('press-track');
+      const hint  = document.getElementById('press-hint');
+      const prev  = document.querySelector('.press-arrow.prev');
+      const next  = document.querySelector('.press-arrow.next');
+      const CLD   = 'https://res.cloudinary.com/diitxd6ou/image/upload';
+
+      track.innerHTML = PRESS_PHOTOS.map((p, i) => `
+        <div class="press-slide">
+          <img loading="lazy" decoding="async" width="${p.w}" height="${p.h}" alt="${p.alt}"
+               src="${CLD}/h_720,c_limit,f_auto,q_auto/${p.id}">
+          <a class="press-dl" href="${CLD}/fl_attachment:NightTimeDrive_Press_${i + 1}/${p.id}" aria-label="Download full-size photo ${i + 1}">&#8595; Download</a>
+        </div>`).join('');
+
+      document.querySelectorAll('[data-press-zip]').forEach(a => { a.href = PRESS_ZIP_URL; });
+
+      const update = () => {
+        const max = track.scrollWidth - track.clientWidth;
+        const overflow = max > 4;
+        prev.hidden = !overflow || track.scrollLeft <= 4;
+        next.hidden = !overflow || track.scrollLeft >= max - 4;
+        if (!overflow || track.scrollLeft > 4) hint.hidden = true;
+        else if (window.matchMedia('(max-width: 860px)').matches) hint.hidden = false;
+      };
+      const step = dir => track.scrollBy({ left: dir * track.clientWidth * 0.8 });
+      prev.addEventListener('click', () => step(-1));
+      next.addEventListener('click', () => step(1));
+      track.addEventListener('scroll', update, { passive: true });
+      window.addEventListener('resize', update);
+      update();
+    })();
 
     document.querySelectorAll('iframe[data-src]').forEach(iframe => {
       iframeObserver.observe(iframe);
