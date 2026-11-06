@@ -1578,15 +1578,14 @@
       });
     }, { rootMargin: '200px' });
 
-    /* Nav + hero logos: scroll to the first live video. On desktop they also start it through
-       the YouTube player API (retrying muted if sound is blocked). Do not use ?autoplay=1 here,
-       it gave a grey screen on this site. Touch devices keep the plain embed and only scroll:
-       with the player API on, the embed showed "An error occurred" on iPhone (exact cause not confirmed). */
+    /* Nav + hero logos: scroll to the first live video and start it through the YouTube
+       player API, retrying muted if the browser blocks sound (iPhones can). Do not use
+       ?autoplay=1 here, it gave a grey screen on this site. VS Code's mobile preview can
+       show "An error occurred" on embeds, so test video on a real phone. */
     (function initLogoPlay() {
       const frame = document.getElementById('first-live-video');
       const YT = 'https://www.youtube.com';
-      const canAutoplay = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-      if (canAutoplay) frame.dataset.src += '?enablejsapi=1';
+      frame.dataset.src += '?enablejsapi=1&playsinline=1';
       const post = msg => frame.contentWindow && frame.contentWindow.postMessage(JSON.stringify(msg), YT);
       const command = func => post({ event: 'command', func, args: [] });
       let playing = false;
@@ -1606,7 +1605,6 @@
           frame.src = frame.dataset.src;
           iframeObserver.unobserve(frame);
         }
-        if (!canAutoplay) return;
         playing = false;
         let tries = 0;
         const timer = setInterval(() => {
