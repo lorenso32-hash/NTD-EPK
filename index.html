@@ -1663,7 +1663,7 @@
 
       if (canSharePhotos) {
         const fileFor = async i => {
-          const res = await fetch(`${CLD}/c_limit,w_4000,f_jpg,q_90/${PRESS_PHOTOS[i].id}`);
+          const res = await fetch(`${CLD}/${PRESS_PHOTOS[i].id}`); /* original file, no compression */
           if (!res.ok) throw new Error('fetch failed');
           return new File([await res.blob()], `NightTimeDrive_Press_${i + 1}.jpg`, { type: 'image/jpeg' });
         };
