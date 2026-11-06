@@ -603,6 +603,7 @@
     .press-dl:hover { background: var(--teal); color: var(--navy); }
     @media (max-width: 860px) {
       #hero::before {
+        opacity: 0.4;
         background-image: url('https://res.cloudinary.com/diitxd6ou/image/upload/w_1000,f_auto,q_auto/ntd_live_pic_sdtjjo');
       }
       .hero-social { gap: 22px; }
@@ -1648,10 +1649,70 @@
         <div class="press-slide">
           <img loading="lazy" decoding="async" width="${p.w}" height="${p.h}" alt="${p.alt}"
                src="${CLD}/h_720,c_limit,f_auto,q_auto/${p.id}">
-          <a class="press-dl" href="${CLD}/fl_attachment:NightTimeDrive_Press_${i + 1}/${p.id}" aria-label="Download full-size photo ${i + 1}">&#8595; Download</a>
+          <a class="press-dl" data-i="${i}" href="${CLD}/fl_attachment:NightTimeDrive_Press_${i + 1}/${p.id}" aria-label="Download full-size photo ${i + 1}">&#8595; Download</a>
         </div>`).join('');
 
       document.querySelectorAll('[data-press-zip]').forEach(a => { a.href = PRESS_ZIP_URL; });
+
+      /* Phones: save through the share sheet so photos can go to the Photos app.
+         Tap once to prepare, tap again to share, because the browser requires share()
+         to come directly from a tap. Anything unsupported falls back to the normal link. */
+      const probe = new File([new Blob(['x'], { type: 'image/jpeg' })], 'x.jpg', { type: 'image/jpeg' });
+      const canSharePhotos = window.matchMedia('(hover: none)').matches
+        && navigator.canShare && navigator.canShare({ files: [probe] });
+
+      if (canSharePhotos) {
+        const fileFor = async i => {
+          const res = await fetch(`${CLD}/c_limit,w_4000,f_jpg,q_90/${PRESS_PHOTOS[i].id}`);
+          if (!res.ok) throw new Error('fetch failed');
+          return new File([await res.blob()], `NightTimeDrive_Press_${i + 1}.jpg`, { type: 'image/jpeg' });
+        };
+
+        const saveToPhone = async (el, indexes) => {
+          const label = el.querySelector('.dl-title') || el;
+          if (el.dataset.busy) return;
+          const fallback = () => { window.location.href = el.href; };
+          if (!el.photoFiles) {
+            el.dataset.busy = '1';
+            el.dataset.label = label.innerHTML;
+            label.textContent = 'Preparing...';
+            try {
+              el.photoFiles = await Promise.all(indexes.map(fileFor));
+              label.textContent = 'Tap to Save';
+            } catch (err) {
+              label.innerHTML = el.dataset.label;
+              fallback();
+            }
+            delete el.dataset.busy;
+            return;
+          }
+          const files = el.photoFiles;
+          el.photoFiles = null;
+          label.innerHTML = el.dataset.label;
+          if (!navigator.canShare({ files })) return fallback();
+          try {
+            await navigator.share({ files });
+          } catch (err) {
+            if (err.name !== 'AbortError') fallback();
+          }
+        };
+
+        const all = PRESS_PHOTOS.map((_, i) => i);
+        document.querySelectorAll('[data-press-zip]').forEach(a => a.addEventListener('click', e => {
+          e.preventDefault();
+          saveToPhone(a, all);
+        }));
+        track.addEventListener('click', e => {
+          const a = e.target.closest('.press-dl');
+          if (!a) return;
+          e.preventDefault();
+          saveToPhone(a, [Number(a.dataset.i)]);
+        });
+        document.querySelector('.press-cta [data-press-zip]').textContent = 'Save All Photos';
+        const note = document.querySelector('.press-note');
+        note.innerHTML = 'Tap Save All Photos, tap again when ready, then choose Save Images. <a id="press-zip-alt" style="color:var(--teal);">Get the zip instead</a>';
+        document.getElementById('press-zip-alt').href = PRESS_ZIP_URL;
+      }
 
       const update = () => {
         const max = track.scrollWidth - track.clientWidth;
